@@ -29,13 +29,14 @@ export const getTodos = async (req: Request, res: Response) => {
 
 export const createTodo = async (req: Request, res: Response) => {
   const { title, description } = req.body;
-  const { user } = req;
+  const { id: userId } = req.user || {};
 
-  if (user === undefined) {
-    res.status(500).json({ message: "User doesn't exist!" });
+  if (!userId) {
+    res.status(400).json({
+      message: "User ID is required",
+    });
+    return;
   }
-
-  const userId: string | undefined = user?.id;
 
   try {
     const todo = await prisma.todo.create({
@@ -88,6 +89,13 @@ export const updateTodo = async (req: Request, res: Response) => {
 
 export const deleteTodo = async (req: Request, res: Response) => {
   const { todoId } = req.params;
+
+  if (!todoId) {
+    res.status(400).json({
+      message: "Todo ID is required",
+    });
+    return;
+  }
 
   try {
     await prisma.todo.delete({

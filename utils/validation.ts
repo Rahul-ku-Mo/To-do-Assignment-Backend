@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
 import { User } from "../types";
 
-
 declare global {
   namespace Express {
     interface Request {
@@ -14,7 +13,7 @@ declare global {
 }
 
 export const signToken = (id: string) => {
-  return jwt.sign({ userId: id }, process.env.JWT_SECRET as Secret, {
+  return jwt.sign({ id: id }, process.env.JWT_SECRET as Secret, {
     expiresIn: process.env.JWT_SECRET_EXPIRATION,
   });
 };
